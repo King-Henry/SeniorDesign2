@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "537527237211",
+    "firebase_url": "https://senior-design-2-app.firebaseio.com",
+    "project_id": "senior-design-2-app",
+    "storage_bucket": "senior-design-2-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537527237211:android:291018e311b1db19",
+        "android_client_info": {
+          "package_name": "com.wiita.smartlockapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537527237211-l0b0lh8gk877uj5g7dgilksthliscd12.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wiita.smartlockapp",
+            "certificate_hash": "565927d99ecc3618e700896bb30b2c06a1471e9c"
+          }
+        },
+        {
+          "client_id": "537527237211-bi1av7fg1q1qqg8kbthle4dv06c004jq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk0wCh7NsOKVxDOzC__BSV0SjduZLT7WQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "537527237211-bi1av7fg1q1qqg8kbthle4dv06c004jq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
