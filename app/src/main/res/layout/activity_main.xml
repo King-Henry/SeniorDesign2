@@ -28,20 +28,37 @@
             android:textStyle="bold"
             android:fontFamily="sans-serif-smallcaps"/>
 
-        <VideoView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:id="@+id/live_feed_videoview"
-            android:layout_gravity="top"
-            android:visibility="gone"/>
+            android:layout_gravity="center_horizontal">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <VideoView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/live_feed_videoview"
+                    android:visibility="gone"/>
 
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/live_feed_imageview"
+                    android:background="@color/materialGray"/>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/live_feed_imageview"
-            android:background="@color/materialGray"/>
+            </FrameLayout>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/live_feed_loader"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
 
         <Button
             android:layout_width="match_parent"
@@ -56,6 +73,21 @@
             android:layout_height="wrap_content"
             android:id="@+id/mainactivity_lock_button"
             android:text="Disconnect"/>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/led_on_button"
+            android:text="LED ON"
+            android:enabled="false"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/led_off_button"
+            android:text="LED OFF"
+            android:enabled="false"/>
 
 
 

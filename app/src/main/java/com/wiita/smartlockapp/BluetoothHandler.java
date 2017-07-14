@@ -32,7 +32,6 @@ public class BluetoothHandler {
     }
 
     public void turnBluetoothOn(){
-        bluetoothAdapter.cancelDiscovery();
         if(!bluetoothAdapter.isEnabled()){
             Intent turnOnBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             if(context instanceof Activity){
@@ -44,8 +43,10 @@ public class BluetoothHandler {
             Toast.makeText(context, "BLUETOOTH IS ALREADY ON",Toast.LENGTH_SHORT).show();
         }
         if(!bluetoothAdapter.isDiscovering()) {
-            Log.d("turnBluetoothOn", "BluetoothAdapter already discovering");
+            Log.d("turnBluetoothOn", "starting discovery");
             bluetoothAdapter.startDiscovery();
+        }else {
+            Log.d("turnBluetoothOn", "already discovering");
         }
     }
 
@@ -55,6 +56,21 @@ public class BluetoothHandler {
             bluetoothAdapter.disable();
             Toast.makeText(context, "TURNED OFF", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void cancelDiscovery(){
+        if(bluetoothAdapter.isDiscovering()){
+            bluetoothAdapter.cancelDiscovery();
+        }
+    }
+
+    public void prepareBroadcastReceiver(BroadcastReceiver receiver){
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        context.registerReceiver(receiver,filter);
+    }
+
+    public void unRegisterBroadcastReceiver(BroadcastReceiver receiver){
+        context.unregisterReceiver(receiver);
     }
 
 
