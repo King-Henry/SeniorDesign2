@@ -1,15 +1,14 @@
 package com.wiita.smartlockapp;
 
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import static android.content.ContentValues.TAG;
@@ -23,11 +22,9 @@ public class BluetoothConnectionHandler extends Thread{
     private final BluetoothSocket bluetoothSocket;
     private final InputStream inputStream;
     private final OutputStream outputStream;
-    private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
-    private BluetoothCommunicationReadyListener listener;
+    private BufferedReader bufferedReader;
     private byte[] buffer;
-    private Handler mHandler;
 
     public BluetoothConnectionHandler(BluetoothSocket bluetoothSocket){
         this.bluetoothSocket = bluetoothSocket;
@@ -49,7 +46,7 @@ public class BluetoothConnectionHandler extends Thread{
         inputStream = tempInputStream;
         outputStream = tempOutputStream;
         if(tempInputStream != null) {
-            dataInputStream = new DataInputStream(tempInputStream);
+            bufferedReader = new BufferedReader(new InputStreamReader(tempInputStream));
         }
 
         if(outputStream != null){
@@ -62,10 +59,10 @@ public class BluetoothConnectionHandler extends Thread{
         buffer = new byte[1024];
         while(true){
             try {
-                if(dataInputStream.available() == 0){
+                String a = bufferedReader.readLine();
+                if(a.isEmpty()){
                     break;
                 }
-                int a = dataInputStream.read();
                 Log.d(TAG, "" + a);
                 Log.d("run() called", "reading input stream");
             } catch (IOException e){
@@ -102,10 +99,9 @@ public class BluetoothConnectionHandler extends Thread{
     }
 
 
-
     public void cancelCommunication(){
         try{
-            dataInputStream.close();
+            bufferedReader.close();
             dataOutputStream.close();
         } catch (IOException e){
             Log.e("BluetoothConnectionh","failed to close the connection socket",e);

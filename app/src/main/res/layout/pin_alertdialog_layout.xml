@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/pin_bluetooth_auth_root">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="23dp"
+        android:layout_marginStart="23dp"
+        android:id="@+id/pin_bluetooth_auth_edittext"
+        android:maxLength="6"
+        android:hint="Enter PIN"
+        android:inputType="phone"/>
+
+</FrameLayout>

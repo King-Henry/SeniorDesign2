@@ -31,7 +31,7 @@ public class DatabaseHandler implements ChildEventListener {
     }
 
     public DatabaseHandler(ImageLoaderListener listener){
-        imagesDatabase = FirebaseDatabase.getInstance().getReference("images").endAt();
+        imagesDatabase = FirebaseDatabase.getInstance().getReference("images");
         imagesDatabase.addChildEventListener(this);
         imageLoaderListener = listener;
         handlerThread = new HandlerThread("BACKGROUND_THREAD");

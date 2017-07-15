@@ -29,20 +29,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity implements BluetoothConnectedListener, DatabaseHandler.ImageLoaderListener {
+public class MainActivity extends AppCompatActivity
+        implements DatabaseHandler.ImageLoaderListener {
 
     private Button unlockButton;
     private Button lockButton;
-    private Button ledOnButton;
-    private Button ledOffButton;
     private ImageView liveFeedImage;
     private ProgressBar progressBar;
 
     private BluetoothHandler bluetoothHandler;
-    private BluetoothConnector bluetoothConnector;
     private DatabaseHandler databaseHandler;
-    private BluetoothConnectionHandler connectionHandler;
     private final static int REQUEST_COARSE_LOCATION = 10;
+    public final static String BLUETOOTH_AUTH_FLAG = "BLUETOOTH_AUTH_FLAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements BluetoothConnecte
         liveFeedImage = (ImageView)findViewById(R.id.live_feed_imageview);
         unlockButton = (Button)findViewById(R.id.mainactivity_unlock_button);
         lockButton = (Button)findViewById(R.id.mainactivity_lock_button);
-        ledOnButton = (Button)findViewById(R.id.led_on_button);
-        ledOffButton = (Button)findViewById(R.id.led_off_button);
         progressBar = (ProgressBar)findViewById(R.id.live_feed_loader);
         checkLocationPermission();
         databaseHandler.clearImageCache(this);
@@ -63,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothConnecte
         unlockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bluetoothHandler.turnBluetoothOn();
+//                bluetoothHandler.turnBluetoothOn();
 //                progressBar.setVisibility(View.VISIBLE);
             }
         });
@@ -71,51 +67,11 @@ public class MainActivity extends AppCompatActivity implements BluetoothConnecte
         lockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(connectionHandler != null) {
-                    connectionHandler.cancelCommunication();
-                }
-                bluetoothConnector.cancelConnection();
-                bluetoothHandler.turnBluetoothOff();
-//                progressBar.setVisibility(View.INVISIBLE);
-            }
-        });
 
-        ledOnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                connectionHandler.writeChars('1');
-                connectionHandler.run();
-            }
-        });
-
-        ledOffButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                connectionHandler.writeChar('0');
             }
         });
 
     }
-
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if(BluetoothDevice.ACTION_FOUND.equals(action)){
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String deviceName = device.getName();
-                if(deviceName != null && !deviceName.isEmpty()){
-                    Log.d("onReceive: ", deviceName);
-                    if(deviceName.equals("HC-05")){
-                        Toast.makeText(context,"Connected to LED",Toast.LENGTH_SHORT);
-                        bluetoothConnector = new BluetoothConnector(device,MainActivity.this);
-                        bluetoothConnector.run();
-                    }
-                    Toast.makeText(context, deviceName ,Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    };
 
     private void checkLocationPermission(){
         if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -133,20 +89,12 @@ public class MainActivity extends AppCompatActivity implements BluetoothConnecte
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == REQUEST_COARSE_LOCATION){
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                bluetoothHandler.prepareBroadcastReceiver(broadcastReceiver);
+                //TODO: DO THIS
             }
             else{
                 Log.d("onRequestPermissions...", "onRequestPermissionsResult: Permission not granted");
             }
         }
-    }
-
-    @Override
-    public void onConnected(BluetoothSocket socket) {
-        connectionHandler = new BluetoothConnectionHandler(socket);
-        ledOnButton.setEnabled(true);
-        ledOffButton.setEnabled(true);
-//        connectionHandler.run();
     }
 
     @Override
@@ -162,24 +110,6 @@ public class MainActivity extends AppCompatActivity implements BluetoothConnecte
         Log.d("setLoadingState,", "setLoadingState: making loader visible");
         progressBar.setVisibility(View.VISIBLE);
         progressBar.bringToFront();
-    }
-
-    @Override
-    protected void onResume() {
-
-        if(bluetoothHandler != null){
-            bluetoothHandler.prepareBroadcastReceiver(broadcastReceiver);
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        if(bluetoothHandler != null){
-            bluetoothHandler.cancelDiscovery();
-            bluetoothHandler.unRegisterBroadcastReceiver(broadcastReceiver);
-        }
-        super.onPause();
     }
 
     @Override

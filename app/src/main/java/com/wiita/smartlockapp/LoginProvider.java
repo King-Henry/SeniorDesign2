@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.widget.Toast;
 
-import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +21,9 @@ public class LoginProvider implements FirebaseAuth.AuthStateListener,
         OnCompleteListener<AuthResult>{
 
     private Context context;
-    Activity activity;
     public static boolean fingerPrintIsCompatible;
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
+
 
     public LoginProvider(Context context){
         this.context = context;
@@ -57,9 +55,7 @@ public class LoginProvider implements FirebaseAuth.AuthStateListener,
     }
 
     @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-    }
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) { }
 
     public void addFireBaseAuthListener(){
         firebaseAuth.addAuthStateListener(this);
@@ -82,9 +78,10 @@ public class LoginProvider implements FirebaseAuth.AuthStateListener,
         firebaseAuth.signInWithEmailAndPassword(username.toString(),password.toString()).addOnCompleteListener((Activity)context,this);
     }
 
-    public void activateSignInButton(){
-
-
+    public void cleanUp(){
+        stopListeningForFingerprints();
+        removeFireBaseAuthListener();
+        firebaseAuth = null;
     }
 
 }

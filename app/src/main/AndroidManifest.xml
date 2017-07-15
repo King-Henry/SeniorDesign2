@@ -20,6 +20,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver
+            android:name=".BluetoothReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+                <action android:name="android.bluetooth.device.action.FOUND" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".MainActivity" />
         <activity
             android:name=".LoginActivity"
@@ -37,6 +46,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wiita.smartlockapp.MainActivity" />
+        </activity>
+        <activity android:name=".BluetoothAuthActivity"
+            android:theme="@style/AppCompatTransparent">
         </activity>
     </application>
 

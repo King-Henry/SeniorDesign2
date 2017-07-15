@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -12,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -30,13 +32,13 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
     private EditText userNameEditText;
     private EditText passwordEditText;
     private EditText pinEditText;
-    private CharSequence tim;
     private Button loginButton;
     private ImageButton userpassButton;
     private ImageButton pinButton;
     private CardView userNameEditTextContainer;
     private CardView passwordEditTextContainer;
     private CardView pinEditTextContainer;
+    private FrameLayout rootlayout;
 
 
     @Override
@@ -44,7 +46,7 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
+        rootlayout = (FrameLayout)findViewById(R.id.login_screen_root);
         userNameEditText = (EditText)findViewById(R.id.login_activity_username_edittext);
         passwordEditText = (EditText)findViewById(R.id.login_activity_password_edittext);
         loginButton = (Button)findViewById(R.id.login_button);
@@ -64,42 +66,30 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
         passwordEditText.addTextChangedListener(this);
         pinEditText.addTextChangedListener(this);
         loginButton.setOnClickListener(this);
-        loginProvider = new LoginProvider(this);
 
+        loginProvider = new LoginProvider(this);
         if(LoginProvider.fingerPrintIsCompatible){
             fingerPrintButton.setVisibility(VISIBLE);
             addFingerPrintDialog();
         }
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if(loginProvider != null){
-            loginProvider.addFireBaseAuthListener();
-        }
+        loginProvider.startListeningForFingerprints();
+        loginProvider.addFireBaseAuthListener();
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
         if(loginProvider != null){
+            loginProvider.stopListeningForFingerprints();
             loginProvider.removeFireBaseAuthListener();
         }
+        super.onStop();
     }
 
-    @Override
-    protected void onPause() {
-        loginProvider.stopListeningForFingerprints();
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        loginProvider.startListeningForFingerprints();
-        super.onResume();
-    }
 
     @Override
     protected void onDestroy() {
