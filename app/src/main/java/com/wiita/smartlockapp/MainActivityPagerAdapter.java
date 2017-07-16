@@ -24,7 +24,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return SummaryFragment.newInstance(null,null);
             default:
-                return SummaryFragment.newInstance(null,null);
+                return HistoryFragment.newInstance(null,null);
         }
     }
 

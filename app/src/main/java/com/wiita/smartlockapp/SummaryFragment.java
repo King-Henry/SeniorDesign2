@@ -7,18 +7,28 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
 
-public class SummaryFragment extends Fragment implements DatabaseHandler.ImageLoaderListener{
+public class SummaryFragment extends Fragment
+        implements DatabaseHandler.ImageLoaderListener,
+        YouTubePlayer.OnInitializedListener
+{
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -27,10 +37,11 @@ public class SummaryFragment extends Fragment implements DatabaseHandler.ImageLo
     private Button lockButton;
     private ImageView liveFeedImage;
     private ProgressBar progressBar;
+    private FrameLayout liveFeedContainer;
 
-    private BluetoothHandler bluetoothHandler;
     private DatabaseHandler databaseHandler;
     private final static int REQUEST_COARSE_LOCATION = 10;
+    public final static String YOUTUBE_API_KEY = "AIzaSyAkLJdTYa8TMRU7Td9mblFfdh7iQgRFYF0";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -64,7 +75,14 @@ public class SummaryFragment extends Fragment implements DatabaseHandler.ImageLo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_summary,container,false);
-        bluetoothHandler = new BluetoothHandler(getActivity());
+
+        liveFeedContainer = (FrameLayout)rootView.findViewById(R.id.live_feed_container);
+        YouTubePlayerSupportFragment fragment = new YouTubePlayerSupportFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.youtube_fragment,fragment).commit();
+        fragment.initialize(YOUTUBE_API_KEY,this);
+
+
         databaseHandler = new DatabaseHandler(this);
 
         liveFeedImage = (ImageView)rootView.findViewById(R.id.live_feed_imageview);
@@ -119,6 +137,16 @@ public class SummaryFragment extends Fragment implements DatabaseHandler.ImageLo
                 Log.d("onRequestPermissions...", "onRequestPermissionsResult: Permission not granted");
             }
         }
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+        youTubePlayer.cueVideo("9bZkp7q19f0");
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
     }
 
     @Override

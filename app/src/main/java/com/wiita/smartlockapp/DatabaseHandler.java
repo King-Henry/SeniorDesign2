@@ -41,11 +41,11 @@ public class DatabaseHandler implements ChildEventListener {
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        imageLoaderListener.setLoadingState();
-        Log.d(TAG, "onChildAdded() called with: dataSnapshot = [" + dataSnapshot + "], s = [" + s + "]");
-        Image image = dataSnapshot.getValue(Image.class);
-        Log.d(TAG, image.url);
-        imageLoaderListener.onImageReady(image.url);
+//        imageLoaderListener.setLoadingState();
+//        Log.d(TAG, "onChildAdded() called with: dataSnapshot = [" + dataSnapshot + "], s = [" + s + "]");
+//        Image image = dataSnapshot.getValue(Image.class);
+//        Log.d(TAG, image.url);
+//        imageLoaderListener.onImageReady(image.url);
     }
 
     public void clearImageCache(final Context context){
