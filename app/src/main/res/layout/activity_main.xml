@@ -3,95 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainactvity_rootview"
+    android:id="@+id/main_activity_rootview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.wiita.smartlockapp.MainActivity"
-    android:background="@color/materialGrayDark">
+    >
 
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_activity_viewpager">
+    </android.support.v4.view.ViewPager>
 
-    <LinearLayout
+    <android.support.design.widget.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="72dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/live_feed_headertext"
-            android:layout_marginBottom="10dp"
-            android:text="Live Feed"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-smallcaps"/>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_gravity="center_horizontal">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <VideoView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/live_feed_videoview"
-                    android:visibility="gone"/>
-
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/live_feed_imageview"
-                    android:background="@color/materialGray"/>
-
-            </FrameLayout>
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/live_feed_loader"
-                android:layout_gravity="center"/>
-
-        </FrameLayout>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mainactivity_unlock_button"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="Connect and Search for devices"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mainactivity_lock_button"
-            android:text="Disconnect"/>
-
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/led_on_button"
-            android:text="LED ON"
-            android:enabled="false"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/led_off_button"
-            android:text="LED OFF"
-            android:enabled="false"/>
-
-
-
-    </LinearLayout>
-
+        android:id="@+id/main_activity_tab_layout"
+        android:background="@color/materialGray">
+    </android.support.design.widget.TabLayout>
 
 </FrameLayout>

@@ -68,7 +68,8 @@ public class LoginProvider implements FirebaseAuth.AuthStateListener,
     @Override
     public void onComplete(@NonNull Task<AuthResult> task) {
         if(task.isSuccessful()){
-            LoginActivity.navigateToMainActivity(context);
+            //I know this is bad practice. If I have time I'll come back and create a better solution
+            ((LoginActivity)context).navigateToMainActivity();
         } else{
             Toast.makeText(context,"WRONG CREDENTIALS",Toast.LENGTH_SHORT).show();
         }

@@ -134,7 +134,7 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
     public void onSuccess(int moduleTag) {
         Toast.makeText(this,"SUCCESS",Toast.LENGTH_SHORT).show();
         alertDialog.dismiss();
-        navigateToMainActivity(this);
+        navigateToMainActivity();
     }
 
     private void prepareScreenForPin(){
@@ -182,9 +182,10 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
                 || loginProvider.stringHasValue(pinEditText.getText().toString());
     }
 
-    public static void navigateToMainActivity(Context context){
-        Intent intent = new Intent(context, MainActivity.class);
-        context.startActivity(intent);
+    public void navigateToMainActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }
