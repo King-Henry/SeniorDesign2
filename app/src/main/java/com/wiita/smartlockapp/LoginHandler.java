@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
  * Created by Wiita on 6/22/2017.
  */
 
-public class LoginProvider implements FirebaseAuth.AuthStateListener,
+public class LoginHandler implements FirebaseAuth.AuthStateListener,
         OnCompleteListener<AuthResult>{
 
     private Context context;
@@ -25,7 +25,7 @@ public class LoginProvider implements FirebaseAuth.AuthStateListener,
     private FirebaseAuth firebaseAuth;
 
 
-    public LoginProvider(Context context){
+    public LoginHandler(Context context){
         this.context = context;
         Reprint.initialize(context);
         fingerPrintIsCompatible = checkFingerprintCompatibility();

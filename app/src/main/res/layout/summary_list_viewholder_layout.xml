@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:id="@+id/summary_list_viewholder_root"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/summary_list_viewholder_image"
+        android:src="@drawable/ic_dialpad_black_24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:text="UNKNOWN USER"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:id="@+id/summary_list_viewholder_header"
+        app:layout_constraintLeft_toRightOf="@id/summary_list_viewholder_image"
+        app:layout_constraintTop_toTopOf="parent"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:text="User attempted to access door"
+        android:id="@+id/summary_list_viewholder_subheader"
+        app:layout_constraintTop_toBottomOf="@id/summary_list_viewholder_header"
+        app:layout_constraintLeft_toRightOf="@id/summary_list_viewholder_image"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="7/17/2017"
+        android:textSize="12sp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:id="@+id/summary_list_viewholder_datetime"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    
+    <view
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/materialGray"
+        android:id="@+id/summary_list_viewholder_horizontal_separator"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+</android.support.constraint.ConstraintLayout>

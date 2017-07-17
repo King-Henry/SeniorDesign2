@@ -1,10 +1,8 @@
 package com.wiita.smartlockapp;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -27,7 +25,7 @@ public class LoginActivity extends AppCompatActivity implements
 AuthenticationListener, TextWatcher, View.OnClickListener{
 
     private ImageButton fingerPrintButton;
-    private LoginProvider loginProvider;
+    private LoginHandler loginHandler;
     private AlertDialog alertDialog;
     private EditText userNameEditText;
     private EditText passwordEditText;
@@ -67,8 +65,8 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
         pinEditText.addTextChangedListener(this);
         loginButton.setOnClickListener(this);
 
-        loginProvider = new LoginProvider(this);
-        if(LoginProvider.fingerPrintIsCompatible){
+        loginHandler = new LoginHandler(this);
+        if(LoginHandler.fingerPrintIsCompatible){
             fingerPrintButton.setVisibility(VISIBLE);
             addFingerPrintDialog();
         }
@@ -77,15 +75,15 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
     @Override
     protected void onStart() {
         super.onStart();
-        loginProvider.startListeningForFingerprints();
-        loginProvider.addFireBaseAuthListener();
+        loginHandler.startListeningForFingerprints();
+        loginHandler.addFireBaseAuthListener();
     }
 
     @Override
     protected void onStop() {
-        if(loginProvider != null){
-            loginProvider.stopListeningForFingerprints();
-            loginProvider.removeFireBaseAuthListener();
+        if(loginHandler != null){
+            loginHandler.stopListeningForFingerprints();
+            loginHandler.removeFireBaseAuthListener();
         }
         super.onStop();
     }
@@ -106,7 +104,7 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.dismiss();
-                        loginProvider.stopListeningForFingerprints();
+                        loginHandler.stopListeningForFingerprints();
                     }
                 }).show();
     }
@@ -168,18 +166,18 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
             prepareScreenForPin();
         } else if(v == fingerPrintButton){
             addFingerPrintDialog();
-            loginProvider.startListeningForFingerprints();
+            loginHandler.startListeningForFingerprints();
         } else if (v == loginButton){
-            loginProvider.attemptSignIn(userNameEditText.getText(), passwordEditText.getText());
+            loginHandler.attemptSignIn(userNameEditText.getText(), passwordEditText.getText());
         } else{
             prepareScreenForUserPass();
         }
     }
 
     private boolean activateSignInButton(){
-        return (loginProvider.stringHasValue(userNameEditText.getText().toString()) &&
-                loginProvider.stringHasValue(passwordEditText.getText().toString()))
-                || loginProvider.stringHasValue(pinEditText.getText().toString());
+        return (loginHandler.stringHasValue(userNameEditText.getText().toString()) &&
+                loginHandler.stringHasValue(passwordEditText.getText().toString()))
+                || loginHandler.stringHasValue(pinEditText.getText().toString());
     }
 
     public void navigateToMainActivity(){

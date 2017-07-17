@@ -21,11 +21,9 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
 
-public class SummaryFragment extends Fragment
+public class SummaryListFragment extends Fragment
         implements DatabaseHandler.ImageLoaderListener,
         YouTubePlayer.OnInitializedListener
 {
@@ -49,12 +47,12 @@ public class SummaryFragment extends Fragment
 
     private OnSummaryFragmentInteractionListener mListener;
 
-    public SummaryFragment() {
+    public SummaryListFragment() {
         // Required empty public constructor
     }
 
-    public static SummaryFragment newInstance(String param1, String param2) {
-        SummaryFragment fragment = new SummaryFragment();
+    public static SummaryListFragment newInstance(String param1, String param2) {
+        SummaryListFragment fragment = new SummaryListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -141,7 +139,7 @@ public class SummaryFragment extends Fragment
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        youTubePlayer.cueVideo("9bZkp7q19f0");
+        youTubePlayer.cueVideo("jAZlQLSXCIc");
     }
 
     @Override

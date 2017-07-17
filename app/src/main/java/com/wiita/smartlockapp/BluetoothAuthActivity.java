@@ -12,7 +12,7 @@ import com.github.ajalt.reprint.core.AuthenticationListener;
 
 public class BluetoothAuthActivity extends AppCompatActivity implements AuthenticationListener {
 
-    private LoginProvider loginProvider;
+    private LoginHandler loginHandler;
     private AlertDialog fingerPrintDialog;
     private AlertDialog pinDialog;
 
@@ -20,10 +20,10 @@ public class BluetoothAuthActivity extends AppCompatActivity implements Authenti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_auth);
-        loginProvider = new LoginProvider(this);
+        loginHandler = new LoginHandler(this);
         addPinDialog();
-        if(loginProvider == null){
-            loginProvider = new LoginProvider(this);
+        if(loginHandler == null){
+            loginHandler = new LoginHandler(this);
         }
 
     }
@@ -37,7 +37,7 @@ public class BluetoothAuthActivity extends AppCompatActivity implements Authenti
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         fingerPrintDialog.dismiss();
-                        loginProvider.stopListeningForFingerprints();
+                        loginHandler.stopListeningForFingerprints();
                     }
                 }).show();
     }
@@ -76,16 +76,16 @@ public class BluetoothAuthActivity extends AppCompatActivity implements Authenti
     @Override
     protected void onStart() {
         super.onStart();
-        loginProvider.startListeningForFingerprints();
-        loginProvider.addFireBaseAuthListener();
+        loginHandler.startListeningForFingerprints();
+        loginHandler.addFireBaseAuthListener();
 
     }
 
     @Override
     protected void onStop() {
-        if(loginProvider != null){
-            loginProvider.stopListeningForFingerprints();
-            loginProvider.removeFireBaseAuthListener();
+        if(loginHandler != null){
+            loginHandler.stopListeningForFingerprints();
+            loginHandler.removeFireBaseAuthListener();
         }
         super.onStop();
     }

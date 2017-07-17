@@ -5,7 +5,7 @@
     android:id="@+id/summary_fragment_rootview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wiita.smartlockapp.SummaryFragment"
+    tools:context="com.wiita.smartlockapp.SummaryListFragment"
     android:background="@color/materialGrayDark">
 
 
