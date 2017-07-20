@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_rootview"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context="com.wiita.smartlockapp.MainActivity"
     >
-
-    <android.support.v4.view.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/main_activity_viewpager">
-    </android.support.v4.view.ViewPager>
 
     <android.support.design.widget.TabLayout
         android:layout_width="match_parent"
@@ -22,4 +17,11 @@
         android:background="@color/materialGray">
     </android.support.design.widget.TabLayout>
 
-</FrameLayout>
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_activity_viewpager">
+    </android.support.v4.view.ViewPager>
+
+
+</LinearLayout>

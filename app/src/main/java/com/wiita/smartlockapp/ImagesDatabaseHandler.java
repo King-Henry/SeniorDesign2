@@ -12,40 +12,54 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 import static android.content.ContentValues.TAG;
 
 /**
  * Created by Wiita on 7/9/2017.
  */
 
-public class DatabaseHandler implements ChildEventListener {
+public class ImagesDatabaseHandler implements ChildEventListener {
 
     private DatabaseReference imagesDatabase;
+    private DatabaseReference commandsDatabase;
+    private DatabaseReference historyDatabase;
     private ImageLoaderListener imageLoaderListener;
     private HandlerThread handlerThread;
     private Handler handler;
+    private FirebaseDatabase firebaseDatabase;
+
+    ArrayList<HistoryEvent> events = new ArrayList<>();
 
     public interface ImageLoaderListener{
         void setLoadingState();
         void onImageReady(String url);
     }
 
-    public DatabaseHandler(ImageLoaderListener listener){
-        imagesDatabase = FirebaseDatabase.getInstance().getReference("images");
+    public ImagesDatabaseHandler(ImageLoaderListener listener){
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        imagesDatabase = firebaseDatabase.getReference("images");
+        commandsDatabase = firebaseDatabase.getReference();
+        historyDatabase = firebaseDatabase.getReference("history");
+        historyDatabase.addChildEventListener(this);
         imagesDatabase.addChildEventListener(this);
         imageLoaderListener = listener;
         handlerThread = new HandlerThread("BACKGROUND_THREAD");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
+
     }
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//        Log.d("Image event", "onChildAdded ");
 //        imageLoaderListener.setLoadingState();
 //        Log.d(TAG, "onChildAdded() called with: dataSnapshot = [" + dataSnapshot + "], s = [" + s + "]");
 //        Image image = dataSnapshot.getValue(Image.class);
 //        Log.d(TAG, image.url);
 //        imageLoaderListener.onImageReady(image.url);
+
     }
 
     public void clearImageCache(final Context context){
@@ -77,8 +91,19 @@ public class DatabaseHandler implements ChildEventListener {
 
     }
 
+    public void sendLockCommand(){
+        Command command = new Command("lock");
+        commandsDatabase.child("commands").setValue(command);
+    }
+
+    public void sendUnlockCommand(){
+        Command command = new Command("unlock");
+        commandsDatabase.child("commands").setValue(command);
+    }
+
     public void destroy(){
         handlerThread.quitSafely();
+        historyDatabase.removeEventListener(this);
         imagesDatabase.removeEventListener(this);
     }
 }

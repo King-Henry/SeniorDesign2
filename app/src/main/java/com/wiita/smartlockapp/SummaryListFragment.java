@@ -24,7 +24,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 public class SummaryListFragment extends Fragment
-        implements DatabaseHandler.ImageLoaderListener,
+        implements ImagesDatabaseHandler.ImageLoaderListener,
         YouTubePlayer.OnInitializedListener
 {
 
@@ -37,7 +37,7 @@ public class SummaryListFragment extends Fragment
     private ProgressBar progressBar;
     private FrameLayout liveFeedContainer;
 
-    private DatabaseHandler databaseHandler;
+    private ImagesDatabaseHandler imagesDatabaseHandler;
     private final static int REQUEST_COARSE_LOCATION = 10;
     public final static String YOUTUBE_API_KEY = "AIzaSyAkLJdTYa8TMRU7Td9mblFfdh7iQgRFYF0";
 
@@ -46,6 +46,7 @@ public class SummaryListFragment extends Fragment
     private String mParam2;
 
     private OnSummaryFragmentInteractionListener mListener;
+    private final String YOUTUBE_FRAGMENT_TAG = "YOUTUBE_FRAGMENT_TAG";
 
     public SummaryListFragment() {
         // Required empty public constructor
@@ -75,13 +76,20 @@ public class SummaryListFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_summary,container,false);
 
         liveFeedContainer = (FrameLayout)rootView.findViewById(R.id.live_feed_container);
-        YouTubePlayerSupportFragment fragment = new YouTubePlayerSupportFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.youtube_fragment,fragment).commit();
-        fragment.initialize(YOUTUBE_API_KEY,this);
 
+        YouTubePlayerSupportFragment fragment;
+        if(savedInstanceState == null) {
+            Log.d("onCreateView", "adding YouTube fragment");
+            fragment = new YouTubePlayerSupportFragment();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.add(R.id.youtube_fragment, fragment,YOUTUBE_FRAGMENT_TAG).commit();
+            fragment.initialize(YOUTUBE_API_KEY, this);
+        } else {
+            fragment = (YouTubePlayerSupportFragment) getChildFragmentManager().findFragmentByTag(YOUTUBE_FRAGMENT_TAG);
+            fragment.initialize(YOUTUBE_API_KEY, this);
+        }
 
-        databaseHandler = new DatabaseHandler(this);
+        imagesDatabaseHandler = new ImagesDatabaseHandler(this);
 
         liveFeedImage = (ImageView)rootView.findViewById(R.id.live_feed_imageview);
         unlockButton = (Button)rootView.findViewById(R.id.summary_fragment_unlock_button);
@@ -91,13 +99,13 @@ public class SummaryListFragment extends Fragment
         unlockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                imagesDatabaseHandler.sendUnlockCommand();
             }
         });
         lockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                imagesDatabaseHandler.sendLockCommand();
             }
         });
         return rootView;
@@ -106,11 +114,11 @@ public class SummaryListFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        if (databaseHandler != null) {
+        if (imagesDatabaseHandler != null) {
             // So Glide caches pictures and it seems that if the same url is used for a new picture, Glide will not reload the image
             // So everytime the fragment appears I clear the cache...
             // Probably not the best wait to do this,but I'm sure future Tim will learn lol
-            databaseHandler.clearImageCache(getActivity());
+            imagesDatabaseHandler.clearImageCache(getActivity());
         }
     }
 

@@ -8,7 +8,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements
-        SummaryListFragment.OnSummaryFragmentInteractionListener{
+        SummaryListFragment.OnSummaryFragmentInteractionListener,
+        HistoryFragment.OnHistoryFragmentInteractionListener{
 
     MainActivityPagerAdapter adapter;
     ViewPager viewPager;
@@ -35,4 +36,8 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onHistoryEventSelected(int position) {
+
+    }
 }

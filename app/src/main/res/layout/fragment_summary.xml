@@ -68,13 +68,13 @@
             android:id="@+id/summary_fragment_unlock_button"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="Connect and Search for devices"/>
+            android:text="unlock"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/summary_fragment_lock_button"
-            android:text="Disconnect"/>
+            android:text="lock"/>
 
 
     </LinearLayout>
