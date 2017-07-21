@@ -7,5 +7,5 @@ import java.util.ArrayList;
  */
 
 public interface ViewModelBuilderListener {
-    void onNewListOfModels(final ArrayList<SummaryListEventViewModel> newModels);
+    void onNewListOfModels(final ArrayList<HistoryListEventViewModel> newModels);
 }

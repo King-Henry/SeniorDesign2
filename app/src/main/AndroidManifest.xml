@@ -47,9 +47,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wiita.smartlockapp.MainActivity" />
         </activity>
-        <activity android:name=".BluetoothAuthActivity"
-            android:theme="@style/AppCompatTransparent">
-        </activity>
+        <activity
+            android:name=".BluetoothAuthActivity"
+            android:theme="@style/AppCompatTransparent"></activity>
+        <activity android:name=".HistoryEventDetailActivity"></activity>
     </application>
 
 </manifest>

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/summary_list_fragment_recyclerview"
-        android:background="@color/materialGrayDark">
+        android:background="@color/materialGray">
     </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>

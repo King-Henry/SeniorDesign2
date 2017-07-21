@@ -7,7 +7,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
  */
 
 @IgnoreExtraProperties
-public class SummaryListEventViewModel {
+public class HistoryListEventViewModel {
 
     public String header;
     public String subHeader;
@@ -15,9 +15,9 @@ public class SummaryListEventViewModel {
     public String date;
     public String time;
 
-    public SummaryListEventViewModel() {}
+    public HistoryListEventViewModel() {}
 
-    public SummaryListEventViewModel(String header, String subHeader, String url, String date, String time) {
+    public HistoryListEventViewModel(String header, String subHeader, String url, String date, String time) {
         this.header = header;
         this.subHeader = subHeader;
         this.url = url;

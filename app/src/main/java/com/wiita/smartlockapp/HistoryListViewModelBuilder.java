@@ -10,13 +10,13 @@ import java.util.ArrayList;
  * Created by Wiita on 7/17/2017.
  */
 
-public class SummaryListViewModelBuilder {
+public class HistoryListViewModelBuilder {
 
     private HandlerThread handlerThread;
     private Handler handler;
     private ViewModelBuilderListener listener;
 
-    public SummaryListViewModelBuilder(ViewModelBuilderListener listener){
+    public HistoryListViewModelBuilder(ViewModelBuilderListener listener){
         handlerThread = new HandlerThread("SUMMARY_LIST_HANDLER");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
@@ -27,9 +27,9 @@ public class SummaryListViewModelBuilder {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                ArrayList<SummaryListEventViewModel> viewModels = new ArrayList<SummaryListEventViewModel>();
+                ArrayList<HistoryListEventViewModel> viewModels = new ArrayList<HistoryListEventViewModel>();
                 for(HistoryEvent event: events){
-                    SummaryListEventViewModel model = new SummaryListEventViewModel();
+                    HistoryListEventViewModel model = new HistoryListEventViewModel();
                     model.date = event.date;
                     model.header = event.header;
                     model.time = event.time;
