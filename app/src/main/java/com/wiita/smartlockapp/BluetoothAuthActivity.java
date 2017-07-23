@@ -21,7 +21,7 @@ public class BluetoothAuthActivity extends AppCompatActivity implements Authenti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_auth);
         loginHandler = new LoginHandler(this);
-        addPinDialog();
+        addFingerPrintDialog();
         if(loginHandler == null){
             loginHandler = new LoginHandler(this);
         }

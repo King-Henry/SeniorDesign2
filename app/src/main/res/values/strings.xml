@@ -29,16 +29,29 @@
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
 
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
+    <string name="pref_title_preferred_pin">Preferred PIN</string>
+    <string name="pref_default_pin"> </string>
+
+    <string name="pref_title_preferred_sign_in_method">Preferred Alternate Sign-In Method</string>
+    <string-array name="pref_sign_in_methods">
+        <item>PIN</item>
+        <item>Fingerprint</item>
+        <item>Email and Password</item>
     </string-array>
-    <string-array name="pref_example_list_values">
+    <string-array name="pref_sign_in_values">
         <item>1</item>
         <item>0</item>
         <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_preferred_live_feed_type">Live Feed Type</string>
+    <string-array name="pref_live_feed_types">
+        <item>Live Video Stream(Uses more data)</item>
+        <item>Pictures</item>
+    </string-array>
+    <string-array name="pref_live_feed_values">
+        <item>-1</item>
+        <item>1</item>
     </string-array>
 
     <!-- Example settings for Data & Sync -->

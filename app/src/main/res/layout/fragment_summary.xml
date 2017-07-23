@@ -5,7 +5,7 @@
     android:id="@+id/summary_fragment_rootview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wiita.smartlockapp.SummaryListFragment"
+    tools:context="com.wiita.smartlockapp.SummaryFragment"
     android:background="@color/materialGrayDark">
 
 
@@ -48,8 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/live_feed_imageview"
-                    android:background="@color/materialGray"
-                    android:visibility="gone"/>
+                    android:background="@color/materialGray" />
 
             </FrameLayout>
 

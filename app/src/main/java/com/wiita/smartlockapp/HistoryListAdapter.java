@@ -19,9 +19,11 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryEventListVie
     private HistoryListViewModelBuilder modelBuilder;
     private ArrayList<HistoryListEventViewModel> models = new ArrayList<>();
     private Handler uiHandler = new Handler(Looper.getMainLooper());
+    private HistoryListAdapterListener listAdapterListener;
 
-    public HistoryListAdapter() {
+    public HistoryListAdapter(HistoryListAdapterListener listener) {
         modelBuilder = new HistoryListViewModelBuilder(this);
+        listAdapterListener = listener;
     }
 
     @Override
@@ -56,6 +58,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryEventListVie
             public void run() {
                 models.clear();
                 models.addAll(newModels);
+                listAdapterListener.updateView();
                 notifyDataSetChanged();
                 Log.d("HistoryListAdapter", "new models added");
             }

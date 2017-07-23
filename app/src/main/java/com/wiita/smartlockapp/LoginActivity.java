@@ -2,7 +2,9 @@ package com.wiita.smartlockapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -65,6 +67,11 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
         pinEditText.addTextChangedListener(this);
         loginButton.setOnClickListener(this);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String signInMethod = preferences.getString("preferred_pin","");
+        if(signInMethod.length() < 1){
+            pinButton.setVisibility(GONE);
+        }
         loginHandler = new LoginHandler(this);
         if(LoginHandler.fingerPrintIsCompatible){
             fingerPrintButton.setVisibility(VISIBLE);
@@ -75,8 +82,10 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
     @Override
     protected void onStart() {
         super.onStart();
-        loginHandler.startListeningForFingerprints();
-        loginHandler.addFireBaseAuthListener();
+        if(loginHandler != null) {
+            loginHandler.startListeningForFingerprints();
+            loginHandler.addFireBaseAuthListener();
+        }
     }
 
     @Override
@@ -91,6 +100,11 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
 
     @Override
     protected void onDestroy() {
+        if(alertDialog != null) {
+            if (alertDialog.isShowing()) {
+                alertDialog.dismiss();
+            }
+        }
         super.onDestroy();
     }
 
@@ -168,7 +182,11 @@ AuthenticationListener, TextWatcher, View.OnClickListener{
             addFingerPrintDialog();
             loginHandler.startListeningForFingerprints();
         } else if (v == loginButton){
-            loginHandler.attemptSignIn(userNameEditText.getText(), passwordEditText.getText());
+            if(userNameEditTextContainer.getVisibility() == VISIBLE) {
+                loginHandler.attemptSignIn(userNameEditText.getText(), passwordEditText.getText());
+            }else{
+                loginHandler.attemptPinSignIn(pinEditText.getText().toString());
+            }
         } else{
             prepareScreenForUserPass();
         }

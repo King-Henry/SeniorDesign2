@@ -23,7 +23,6 @@ import static android.content.ContentValues.TAG;
 public class ImagesDatabaseHandler implements ChildEventListener {
 
     private DatabaseReference imagesDatabase;
-    private DatabaseReference commandsDatabase;
     private DatabaseReference historyDatabase;
     private ImageLoaderListener imageLoaderListener;
     private HandlerThread handlerThread;
@@ -40,7 +39,6 @@ public class ImagesDatabaseHandler implements ChildEventListener {
     public ImagesDatabaseHandler(ImageLoaderListener listener){
         firebaseDatabase = FirebaseDatabase.getInstance();
         imagesDatabase = firebaseDatabase.getReference("images");
-        commandsDatabase = firebaseDatabase.getReference();
         historyDatabase = firebaseDatabase.getReference("history");
         historyDatabase.addChildEventListener(this);
         imagesDatabase.addChildEventListener(this);
@@ -53,12 +51,12 @@ public class ImagesDatabaseHandler implements ChildEventListener {
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//        Log.d("Image event", "onChildAdded ");
-//        imageLoaderListener.setLoadingState();
-//        Log.d(TAG, "onChildAdded() called with: dataSnapshot = [" + dataSnapshot + "], s = [" + s + "]");
-//        Image image = dataSnapshot.getValue(Image.class);
-//        Log.d(TAG, image.url);
-//        imageLoaderListener.onImageReady(image.url);
+        Log.d("Image event", "onChildAdded ");
+        imageLoaderListener.setLoadingState();
+        Log.d(TAG, "onChildAdded() called with: dataSnapshot = [" + dataSnapshot + "], s = [" + s + "]");
+        Image image = dataSnapshot.getValue(Image.class);
+        Log.d(TAG, image.url);
+        imageLoaderListener.onImageReady(image.url);
 
     }
 
@@ -72,34 +70,16 @@ public class ImagesDatabaseHandler implements ChildEventListener {
     }
 
     @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-    }
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
 
     @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-    }
+    public void onChildRemoved(DataSnapshot dataSnapshot) { }
 
     @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
 
     @Override
-    public void onCancelled(DatabaseError databaseError) {
-
-    }
-
-    public void sendLockCommand(){
-        Command command = new Command("lock");
-        commandsDatabase.child("commands").setValue(command);
-    }
-
-    public void sendUnlockCommand(){
-        Command command = new Command("unlock");
-        commandsDatabase.child("commands").setValue(command);
-    }
+    public void onCancelled(DatabaseError databaseError) { }
 
     public void destroy(){
         handlerThread.quitSafely();

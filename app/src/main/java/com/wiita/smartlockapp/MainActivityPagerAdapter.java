@@ -22,9 +22,9 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position){
             case 0:
-                return SummaryListFragment.newInstance(null,null);
+                return new SummaryFragment();
             default:
-                return HistoryFragment.newInstance(null,null);
+                return new HistoryFragment();
         }
     }
 

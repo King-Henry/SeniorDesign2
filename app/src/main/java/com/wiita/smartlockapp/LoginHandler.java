@@ -2,6 +2,8 @@ package com.wiita.smartlockapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.widget.Toast;
@@ -77,6 +79,16 @@ public class LoginHandler implements FirebaseAuth.AuthStateListener,
 
     public void attemptSignIn(Editable username, Editable password){
         firebaseAuth.signInWithEmailAndPassword(username.toString(),password.toString()).addOnCompleteListener((Activity)context,this);
+    }
+
+    public void attemptPinSignIn(String pin){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String preferredPin = preferences.getString("preferred_pin","");
+        if(pin.equals(preferredPin)){
+            ((LoginActivity)context).navigateToMainActivity();
+        }else{
+            Toast.makeText(context,"WRONG PIN",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void cleanUp(){

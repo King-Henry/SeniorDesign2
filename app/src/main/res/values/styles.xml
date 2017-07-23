@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/materialGray</item>
         <item name="colorPrimaryDark">@color/materialGrayDark</item>
         <item name="colorAccent">@android:color/holo_blue_dark</item>
+        <item name="android:listPreferredItemHeight">60dp</item>
     </style>
 
     <style name="AppThemeNoToolBar" parent="Theme.AppCompat.Light.DarkActionBar">

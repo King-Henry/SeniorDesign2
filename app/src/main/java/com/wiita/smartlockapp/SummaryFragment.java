@@ -1,12 +1,15 @@
 package com.wiita.smartlockapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -23,13 +26,10 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
-public class SummaryListFragment extends Fragment
+public class SummaryFragment extends Fragment
         implements ImagesDatabaseHandler.ImageLoaderListener,
         YouTubePlayer.OnInitializedListener
 {
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private Button unlockButton;
     private Button lockButton;
@@ -37,59 +37,26 @@ public class SummaryListFragment extends Fragment
     private ProgressBar progressBar;
     private FrameLayout liveFeedContainer;
 
+    private CommandDatabaseHandler commandDatabaseHandler;
+
     private ImagesDatabaseHandler imagesDatabaseHandler;
     private final static int REQUEST_COARSE_LOCATION = 10;
     public final static String YOUTUBE_API_KEY = "AIzaSyAkLJdTYa8TMRU7Td9mblFfdh7iQgRFYF0";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnSummaryFragmentInteractionListener mListener;
     private final String YOUTUBE_FRAGMENT_TAG = "YOUTUBE_FRAGMENT_TAG";
 
-    public SummaryListFragment() {
+    public SummaryFragment() {
         // Required empty public constructor
-    }
-
-    public static SummaryListFragment newInstance(String param1, String param2) {
-        SummaryListFragment fragment = new SummaryListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_summary,container,false);
-
         liveFeedContainer = (FrameLayout)rootView.findViewById(R.id.live_feed_container);
 
-        YouTubePlayerSupportFragment fragment;
-        if(savedInstanceState == null) {
-            Log.d("onCreateView", "adding YouTube fragment");
-            fragment = new YouTubePlayerSupportFragment();
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.add(R.id.youtube_fragment, fragment,YOUTUBE_FRAGMENT_TAG).commit();
-            fragment.initialize(YOUTUBE_API_KEY, this);
-        } else {
-            fragment = (YouTubePlayerSupportFragment) getChildFragmentManager().findFragmentByTag(YOUTUBE_FRAGMENT_TAG);
-            fragment.initialize(YOUTUBE_API_KEY, this);
-        }
-
-        imagesDatabaseHandler = new ImagesDatabaseHandler(this);
+        commandDatabaseHandler = new CommandDatabaseHandler();
 
         liveFeedImage = (ImageView)rootView.findViewById(R.id.live_feed_imageview);
         unlockButton = (Button)rootView.findViewById(R.id.summary_fragment_unlock_button);
@@ -99,13 +66,13 @@ public class SummaryListFragment extends Fragment
         unlockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagesDatabaseHandler.sendUnlockCommand();
+                commandDatabaseHandler.sendUnlockCommand();
             }
         });
         lockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagesDatabaseHandler.sendLockCommand();
+                commandDatabaseHandler.sendLockCommand();
             }
         });
         return rootView;
@@ -153,6 +120,57 @@ public class SummaryListFragment extends Fragment
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        handleLiveFeedType();
+    }
+
+    private void handleLiveFeedType(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String liveFeedType = prefs.getString("live_feed_type","");
+        if(liveFeedType.equals("1") || liveFeedType.isEmpty()){
+            if(imagesDatabaseHandler == null){
+                imagesDatabaseHandler = new ImagesDatabaseHandler(this);
+            }
+            FragmentManager manager = getChildFragmentManager();
+            YouTubePlayerSupportFragment fragment = (YouTubePlayerSupportFragment)manager.findFragmentByTag(YOUTUBE_FRAGMENT_TAG);
+            if(fragment == null){
+                //DO NOTHING...I think
+            } else{
+                manager.beginTransaction().remove(fragment).commit();
+                liveFeedImage.setVisibility(View.VISIBLE);
+            }
+        }else{
+            if(liveFeedImage.getVisibility() == View.VISIBLE){
+                liveFeedImage.setVisibility(View.GONE);
+                if(imagesDatabaseHandler != null){
+                    imagesDatabaseHandler.destroy();
+                    imagesDatabaseHandler = null;
+                }
+                FragmentManager manager = getChildFragmentManager();
+                YouTubePlayerSupportFragment fragment = (YouTubePlayerSupportFragment)manager.findFragmentByTag(YOUTUBE_FRAGMENT_TAG);
+                if(fragment == null){
+                    fragment = new YouTubePlayerSupportFragment();
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.add(R.id.youtube_fragment, fragment,YOUTUBE_FRAGMENT_TAG).commit();
+                    fragment.initialize(YOUTUBE_API_KEY, this);
+                } else{
+                    fragment.initialize(YOUTUBE_API_KEY,this);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if(imagesDatabaseHandler != null){
+            imagesDatabaseHandler.destroy();
+        }
+        super.onDestroy();
     }
 
     @Override

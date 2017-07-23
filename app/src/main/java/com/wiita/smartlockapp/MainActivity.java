@@ -7,13 +7,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity implements
-        SummaryListFragment.OnSummaryFragmentInteractionListener,
+        SummaryFragment.OnSummaryFragmentInteractionListener,
         HistoryFragment.OnHistoryFragmentInteractionListener{
 
     MainActivityPagerAdapter adapter;
@@ -40,6 +43,23 @@ public class MainActivity extends AppCompatActivity implements
         viewPager = (ViewPager)findViewById(R.id.main_activity_viewpager);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.main_activity_settings_menu_item){
+            goToSettings();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -78,5 +98,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    private void goToSettings(){
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }
