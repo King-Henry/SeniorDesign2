@@ -11,6 +11,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -20,28 +21,27 @@ import static android.content.ContentValues.TAG;
  * Created by Wiita on 7/9/2017.
  */
 
-public class ImagesDatabaseHandler implements ChildEventListener {
+public class ImagesDatabaseHandler implements ChildEventListener, ValueEventListener {
 
     private DatabaseReference imagesDatabase;
-    private DatabaseReference historyDatabase;
     private ImageLoaderListener imageLoaderListener;
     private HandlerThread handlerThread;
     private Handler handler;
     private FirebaseDatabase firebaseDatabase;
+    private boolean initialLoadComplete;
 
-    ArrayList<HistoryEvent> events = new ArrayList<>();
+    ArrayList<Image> images = new ArrayList<>();
 
     public interface ImageLoaderListener{
         void setLoadingState();
-        void onImageReady(String url);
+        void onImageReady(Image image);
     }
 
     public ImagesDatabaseHandler(ImageLoaderListener listener){
         firebaseDatabase = FirebaseDatabase.getInstance();
-        imagesDatabase = firebaseDatabase.getReference("images");
-        historyDatabase = firebaseDatabase.getReference("history");
-        historyDatabase.addChildEventListener(this);
+        imagesDatabase = firebaseDatabase.getReference("gifs");
         imagesDatabase.addChildEventListener(this);
+        imagesDatabase.addValueEventListener(this);
         imageLoaderListener = listener;
         handlerThread = new HandlerThread("BACKGROUND_THREAD");
         handlerThread.start();
@@ -56,7 +56,9 @@ public class ImagesDatabaseHandler implements ChildEventListener {
         Log.d(TAG, "onChildAdded() called with: dataSnapshot = [" + dataSnapshot + "], s = [" + s + "]");
         Image image = dataSnapshot.getValue(Image.class);
         Log.d(TAG, image.url);
-        imageLoaderListener.onImageReady(image.url);
+        images.add(image);
+        if(!initialLoadComplete){return;}
+        imageLoaderListener.onImageReady(image);
 
     }
 
@@ -81,9 +83,17 @@ public class ImagesDatabaseHandler implements ChildEventListener {
     @Override
     public void onCancelled(DatabaseError databaseError) { }
 
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        Log.d("ImagesDatabaseHandler", "onDataChange");
+        if(initialLoadComplete){return;}
+        imageLoaderListener.onImageReady(images.get(images.size()-1));
+        initialLoadComplete = true;
+    }
+
     public void destroy(){
         handlerThread.quitSafely();
-        historyDatabase.removeEventListener(this);
-        imagesDatabase.removeEventListener(this);
+        imagesDatabase.removeEventListener((ChildEventListener) this);
+        imagesDatabase.removeEventListener((ValueEventListener)this);
     }
 }

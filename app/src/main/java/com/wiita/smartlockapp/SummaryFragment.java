@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.koushikdutta.ion.Ion;
 
 public class SummaryFragment extends Fragment
         implements ImagesDatabaseHandler.ImageLoaderListener,
@@ -174,12 +175,12 @@ public class SummaryFragment extends Fragment
     }
 
     @Override
-    public void onImageReady(String url) {
+    public void onImageReady(Image image) {
         Glide.with(this)
-                .load(url)
+                .asGif()
+                .load(image.url)
                 .into(liveFeedImage);
-        progressBar.setVisibility(View.INVISIBLE);
-
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
