@@ -2,16 +2,13 @@ package com.wiita.smartlockapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +19,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.koushikdutta.ion.Ion;
 
 public class SummaryFragment extends Fragment
         implements ImagesDatabaseHandler.ImageLoaderListener,
-        YouTubePlayer.OnInitializedListener
+        YouTubePlayer.OnInitializedListener, RequestListener<GifDrawable>
 {
 
     private Button unlockButton;
@@ -41,7 +42,6 @@ public class SummaryFragment extends Fragment
     private CommandDatabaseHandler commandDatabaseHandler;
 
     private ImagesDatabaseHandler imagesDatabaseHandler;
-    private final static int REQUEST_COARSE_LOCATION = 10;
     public final static String YOUTUBE_API_KEY = "AIzaSyAkLJdTYa8TMRU7Td9mblFfdh7iQgRFYF0";
 
     private OnSummaryFragmentInteractionListener mListener;
@@ -63,7 +63,6 @@ public class SummaryFragment extends Fragment
         unlockButton = (Button)rootView.findViewById(R.id.summary_fragment_unlock_button);
         lockButton = (Button)rootView.findViewById(R.id.summary_fragment_lock_button);
         progressBar = (ProgressBar)rootView.findViewById(R.id.live_feed_loader);
-        checkLocationPermission();
         unlockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,29 +86,6 @@ public class SummaryFragment extends Fragment
             // So everytime the fragment appears I clear the cache...
             // Probably not the best wait to do this,but I'm sure future Tim will learn lol
             imagesDatabaseHandler.clearImageCache(getActivity());
-        }
-    }
-
-    private void checkLocationPermission(){
-        if(ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED){
-
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_COARSE_LOCATION);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_COARSE_LOCATION){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                //TODO: DO THIS
-            }
-            else{
-                Log.d("onRequestPermissions...", "onRequestPermissionsResult: Permission not granted");
-            }
         }
     }
 
@@ -161,6 +137,9 @@ public class SummaryFragment extends Fragment
                 } else{
                     fragment.initialize(YOUTUBE_API_KEY,this);
                 }
+                if(progressBar != null){
+                    progressBar.setVisibility(View.GONE);
+                }
 
             }
         }
@@ -178,6 +157,7 @@ public class SummaryFragment extends Fragment
     public void onImageReady(Image image) {
         Glide.with(this)
                 .asGif()
+                .listener(this)
                 .load(image.url)
                 .into(liveFeedImage);
         progressBar.setVisibility(View.GONE);
@@ -205,6 +185,18 @@ public class SummaryFragment extends Fragment
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+        progressBar.setVisibility(View.GONE);
+        return false;
+    }
+
+    @Override
+    public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+        progressBar.setVisibility(View.GONE);
+        return false;
     }
 
     public interface OnSummaryFragmentInteractionListener {

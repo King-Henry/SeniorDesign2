@@ -9,9 +9,14 @@ import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
 
 import static android.content.ContentValues.TAG;
 
@@ -26,18 +31,18 @@ public class BluetoothReceiver extends BroadcastReceiver implements BluetoothCon
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive() called with: context = [" + context + "], intent = [" + intent + "]");
         String action = intent.getAction();
         if(BluetoothDevice.ACTION_FOUND.equals(action)){
-//            createNotification(context);
             Log.d("BluetoothReceiver", " - bluetooth device found");
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             String deviceName = device.getName();
             String deviceMAC = device.getAddress();
+            Toast.makeText(context,deviceName,Toast.LENGTH_SHORT).show();
             if(deviceName != null && !deviceName.isEmpty()){
                 Log.d("onReceive: ", deviceName);
                 Log.d("onReceive: ", deviceMAC);
-                if(deviceName.equals("HC-05")){
+                if(deviceMAC.equals("98:D3:32:30:4B:1F")){
+                    EventBus.getDefault().post(new OnBluetoothDeviceFoundEvent());
                     Toast.makeText(context,"Connected to LED",Toast.LENGTH_SHORT);
                     bluetoothConnector = new BluetoothConnector(device,this);
                     bluetoothConnector.run();
@@ -49,8 +54,8 @@ public class BluetoothReceiver extends BroadcastReceiver implements BluetoothCon
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if(bluetoothAdapter.isEnabled()){
                 if(!bluetoothAdapter.isDiscovering()){
-                    Log.d("BluetoothReceiver", " - starting Bluetooth discovery");
-                    bluetoothAdapter.startDiscovery();
+                    //so this still causes a notification to pop up whether we're turning bluetooth on or off...if I have time I'll go back and fix this
+                    createNotification(context);
                 }
             }
         }
@@ -64,7 +69,7 @@ public class BluetoothReceiver extends BroadcastReceiver implements BluetoothCon
     public static void writeToStreamAndClose(String message){
         if(connectionHandler != null){
             connectionHandler.writeChars(message);
-            connectionHandler.run();
+            //connectionHandler.run();
             connectionHandler.cancelCommunication();
         }
     }
