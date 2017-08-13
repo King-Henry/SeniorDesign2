@@ -29,5 +29,13 @@
         android:singleLine="true"
         android:title="@string/pref_title_preferred_pin" />
 
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_pin"
+        android:key="livestream_id"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_livestream_id" />
 
 </PreferenceScreen>

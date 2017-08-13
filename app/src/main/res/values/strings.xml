@@ -30,6 +30,7 @@
     <string name="pref_default_display_name">John Smith</string>
 
     <string name="pref_title_preferred_pin">Preferred PIN</string>
+    <string name="pref_title_livestream_id">Livestream ID</string>
     <string name="pref_default_pin"> </string>
 
     <string name="pref_title_preferred_sign_in_method">Preferred Alternate Sign-In Method</string>

@@ -2,7 +2,6 @@ package com.wiita.smartlockapp;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,9 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
@@ -95,7 +92,7 @@ public class BluetoothAuthActivity extends AppCompatActivity implements Authenti
                 .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        authroizePin();
+                        authorizePin();
                     }
                 }).show();
     }
@@ -108,13 +105,13 @@ public class BluetoothAuthActivity extends AppCompatActivity implements Authenti
         progressDialog.show();
     }
 
-    private void authroizePin(){
+    private void authorizePin(){
         EditText edittext = (EditText)pinDialog.findViewById(R.id.pin_bluetooth_auth_edittext);
         String pin = edittext.getText().toString();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String preferredPin = preferences.getString("preferred_pin","");
         if(pin.equals(preferredPin)){
-            BluetoothReceiver.writeToStreamAndClose("1");
+            BluetoothReceiver.writeToStreamAndClose('u');
             if(adapter.isDiscovering()){
                 Log.d("Bluetooth Adapter", "canceling discovery");
                 adapter.cancelDiscovery();
@@ -127,7 +124,7 @@ public class BluetoothAuthActivity extends AppCompatActivity implements Authenti
 
     @Override
     public void onSuccess(int moduleTag) {
-        BluetoothReceiver.writeToStreamAndClose("1");
+        BluetoothReceiver.writeToStreamAndClose('u');
         if(adapter.isDiscovering()){
             Log.d("Bluetooth Adapter", "canceling discovery");
             adapter.cancelDiscovery();

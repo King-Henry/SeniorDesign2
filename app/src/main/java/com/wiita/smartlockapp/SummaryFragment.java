@@ -91,7 +91,12 @@ public class SummaryFragment extends Fragment
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        youTubePlayer.cueVideo("jAZlQLSXCIc");
+        String liveStreamId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("livestream_id","");
+        Log.d("Youtube ID", liveStreamId);
+        if(liveStreamId.isEmpty()){
+            return;
+        }
+        youTubePlayer.cueVideo(liveStreamId);
     }
 
     @Override

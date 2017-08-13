@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -48,17 +49,17 @@ public class HistoryEventListViewHolder extends RecyclerView.ViewHolder implemen
         header.setText(model.header);
         subheader.setText(model.subHeader);
         date.setText(model.date);
-        Glide.with(context).load(model.url).apply(RequestOptions.circleCropTransform()).listener(new RequestListener<Drawable>() {
+        Glide.with(context).asGif().load(model.url).apply(RequestOptions.circleCropTransform()).listener(new RequestListener<GifDrawable>() {
             @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
                 progressBar.setVisibility(View.GONE);
                 return false;
             }
 
             @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-               progressBar.setVisibility(View.GONE);
-               return false;
+            public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                return false;
             }
         }).into(image);
     }

@@ -66,9 +66,9 @@ public class BluetoothReceiver extends BroadcastReceiver implements BluetoothCon
         connectionHandler = new BluetoothConnectionHandler(bluetoothSocket);
     }
 
-    public static void writeToStreamAndClose(String message){
+    public static void writeToStreamAndClose(char message){
         if(connectionHandler != null){
-            connectionHandler.writeChars(message);
+            connectionHandler.writeChar(message);
             //connectionHandler.run();
             connectionHandler.cancelCommunication();
         }
